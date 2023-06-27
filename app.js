@@ -197,7 +197,7 @@ class Persona {
     }
     // aprender para hacer el metodo de abajo con un setter
     generaDNI () {
-        this.dni = Math.floor(Math.random()*100000000 + 1);
+        this.dni = Math.floor(Math.random()*100000000);
         
     }
 }
@@ -219,9 +219,9 @@ Crear sus respectivos métodos get y set correspondientes para cada propiedad. C
 Crear al menos 2 objetos libros y utilizar el método mostrarLibro();
 Por último, indicar cuál de los 2 objetos “libros” tiene más páginas. */
 
-
+/*
 class Libro {
-    constructor ( isbn, titulo = "", autor , numeroDePaginas = 0 ){
+    constructor ( isbn=0, titulo = "", autor = "", numeroDePaginas = 0 ){
         this.isbn = isbn
         this.titulo = titulo
         this.autor = autor
@@ -266,8 +266,8 @@ libro1.nuevoTitulo = "PalabrasCruzadas";
 libro1.nuevoNumeroDePag = 350;
 
 const libro2 = new Libro ();
-//libro2.nuevoAutor = "Gabriel G. Marquez";
-//libro2.nuevoIsbn = 4567;
+libro2.nuevoAutor = "Gabriel G. Marquez";
+libro2.nuevoIsbn = 4567;
 libro2.nuevoTitulo = "Cien años de soledad";
 libro2.nuevoNumeroDePag = 800;
 
@@ -278,6 +278,8 @@ libro2.mostrarLibro();
 console.log(libro2.devolverNumeroDePag);
 
 (libro1.devolverNumeroDePag >libro2.devolverNumeroDePag ) ? console.log(`el libro ${libro1.devolverTitulo} tiene mas paginas`) : console.log(`el libro ${libro2.devolverTitulo} tiene mas paginas`) 
+*/
+
 
 
 /* 🟢🟡🔴   7- Nos piden realizar una agenda telefónica de contactos.
@@ -299,7 +301,149 @@ huecosLibres(): indica cuántos contactos más podemos ingresar.
 Crea un menú con opciones que serán seleccionadas por el usuario usando un prompt, las salidas de las operaciones seleccionadas por el usuario se pueden mostrar en pantalla y  por consola.*/
 
 
+class Contacto{
+    constructor(nombre,telefono){
+        this.nombre = nombre
+        this.telefono = telefono
+    }
+}
 
+class Agenda {
+    constructor (contacto = [] , tamano = 10){
+        this.contactos = contacto
+        this.tamano = tamano
+    }
+    aniadirContacto(contacto) {
+        let bandera = false;
+        for (const elemento of this.contactos) {
+            if (elemento.nombre == contacto.nombre) {
+            bandera = true;
+            break;
+            }
+        }
+        if (this.contactos.length >= this.tamano) {
+            console.log (`la agenda esta completa por lo tanto no se agregó el contacto`);
+        } else if (bandera) {
+            console.log(`este contacto existe por lo tanto no se agregó el contacto`);
+        } else {
+            this.contactos.push(contacto)
+        }
+
+
+    }
+
+    existeContacto(contacto) {
+        let bandera = true;
+        for (const elemento of this.contactos) {
+            if (elemento.nombre == contacto.nombre) {
+            console.log(`este contacto existe`);
+            bandera = false;
+            break;
+        }
+        }
+        if (bandera) {
+            console.log(`este contacto no existe`);
+        }
+    }
+
+    listarContactos() {
+        for (const contacto of this.contactos) {
+            console.log(`${contacto.nombre} : ${contacto.telefono}`)
+        }
+    }
+    buscarContacto(nombre) {
+        let bandera = true;
+        for (const elemento of this.contactos) {
+            if (elemento.nombre == nombre) {
+            console.log(`${nombre} : ${elemento.telefono}`);
+            bandera = false;
+            break;
+            }
+        }
+        if (bandera) {
+            console.log(`este contacto no existe`);
+        }
+    }
+    eliminarContacto(contacto) {
+        let bandera = true;
+        for (const i in this.contactos) {
+            if ( this.contactos[i].nombre == contacto) {
+                this.contactos.splice(i,1);
+                bandera = false;
+                break;
+            } 
+        } 
+        if (bandera) {
+            console.log(`este contacto no existe`);
+        }
+            
+    }
+    agendaLlena() {
+        if (this.tamano >= this.contactos.length) {
+            console.log(`la agenda esta completa`);
+        } else {
+            console.log(`la agenda no esta completa`);
+        }
+    }
+    huecosLibres(){
+        if (this.tamano > this.contactos.length) {
+            console.log(`la agenda tiene ${this.tamano - this.contactos.length} espacios disponibles`);
+        } else {
+            console.log(`la agenda no tiene espacios disponibles`);
+        }
+    }
+    set modificarTamano (valor){
+        this.tamano = valor;
+    }
+}
+
+
+let agenda = new Agenda ();
+let menu = "";
+let entero = 0;
+
+while (menu != null) {
+
+    menu = prompt(`MENU \n seleccione la opcion que desee:\n 1 - Añadir un contacto nuevo \n 2 - Listado Contactos\n 3 - Buscar contacto\n 4 - Eliminar contacto\n 5 - Espacios disponibles\n 6 - Modificar el tamaño de la agenda`);
+    entero = parseInt(menu);
+
+    if (menu != null) {
+        switch (entero) {
+            case 1:
+                const nombreCrear = prompt(`Ingrese en nombre del contacto`).toLowerCase();
+                const telefonoCrear = prompt(`Ingrese en telefono del contacto`);
+                const contacto = new Contacto(nombreCrear,telefonoCrear);
+                agenda.aniadirContacto(contacto);
+            break;
+            case 2:
+                agenda.listarContactos();
+            break;
+            case 3:
+                const nombrebusqueda = (prompt(`Ingrese en nombre del contacto que desea buscar`)).toLowerCase();
+                agenda.buscarContacto(nombrebusqueda);
+            break;
+            case 4:
+                const contactoEliminar = (prompt(`Ingrese en nombre del contacto que desea eliminar`)).toLowerCase();
+                agenda.eliminarContacto(contactoEliminar);
+            break;
+            case 5:
+                agenda.huecosLibres();
+            break;
+            case 6:
+                const nuevoTamano = parseInt(prompt(`Ingrese el nuevo tamaño de la agenda`));
+                if (!isNaN(nuevoTamano)) {
+                    agenda.modificarTamano = nuevoTamano;
+                }else{
+                    console.log(`al no ingresar un numero, no se pudo modificar el tamaño`)
+                }
+            break;
+        
+            default:
+                console.log(`el valor ingresado no es valido`);
+                break;
+        }
+    }
+}
 
 
 /*    8- Crea una clase llamada "Persona" que tenga las propiedades "nombre", "edad" y "profesión", y los métodos "saludar" y "despedirse". Luego, crea dos objetos de la clase "Persona" con diferentes valores para sus propiedades y llama a sus métodos "saludar" y "despedirse".*/
